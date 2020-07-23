@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:that_wallpaper_app/all_images.dart';
 import 'package:that_wallpaper_app/fav.dart';
@@ -31,7 +32,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final pages = [AllImages(), Home(), Favorite()];
   final pageController = PageController(initialPage: 1);
   int currentSelected = 1;
 
@@ -41,45 +41,84 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: PageView.builder(
-        controller: pageController,
-        itemCount: pages.length,
-        itemBuilder: (BuildContext context, int index) {
-          return pages[index];
-        },
-        onPageChanged: (int index) {
-          setState(() {
-            currentSelected = index;
-          });
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentSelected,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.image),
-            title: Text('All Images'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Home'),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            title: Text('Favorites'),
-          ),
-        ],
-        onTap: (int index) {
-          setState(() {
-            currentSelected = index;
-            pageController.animateToPage(
-              currentSelected,
-              curve: Curves.fastOutSlowIn,
-              duration: Duration(milliseconds: 400),
+      body: StreamBuilder(
+        stream: Firestore.instance.collection('wallpapers').snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData && snapshot.data.documents.isNotEmpty) {
+            return PageView.builder(
+              controller: pageController,
+              itemCount: 3,
+              itemBuilder: (BuildContext context, int index) {
+                return _getPageAtIndex(index, snapshot);
+              },
+              onPageChanged: (int index) {
+                setState(() {
+                  currentSelected = index;
+                });
+              },
             );
-          });
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
         },
       ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
+  }
+
+  BottomNavigationBar _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      currentIndex: currentSelected,
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.image),
+          title: Text('All Images'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          title: Text('Home'),
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite),
+          title: Text('Favorites'),
+        ),
+      ],
+      onTap: (int index) {
+        setState(() {
+          currentSelected = index;
+          pageController.animateToPage(
+            currentSelected,
+            curve: Curves.fastOutSlowIn,
+            duration: Duration(milliseconds: 400),
+          );
+        });
+      },
+    );
+  }
+
+  Widget _getPageAtIndex(int index, AsyncSnapshot<QuerySnapshot> snapshot) {
+    switch (index) {
+      case 0:
+        return AllImages(
+          snapshot: snapshot,
+        );
+        break;
+      case 1:
+        return Home(
+          snapshot: snapshot,
+        );
+        break;
+      case 2:
+        return Favorite(
+          snapshot: snapshot,
+        );
+        break;
+      default:
+        // Should never get hit.
+        return CircularProgressIndicator();
+        break;
+    }
   }
 }

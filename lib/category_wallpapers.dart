@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'theme_manager.dart';
 import 'utilities.dart';
 
 class CategoryWallpapers extends StatefulWidget {
@@ -20,6 +21,18 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
     return Scaffold(
       appBar: AppBar(
         title: Text('That Wallpaper App!'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.brightness_5),
+            onPressed: () {
+              if (ThemeManager.notifier.value == ThemeMode.dark) {
+                ThemeManager.setTheme(ThemeMode.light);
+              } else {
+                ThemeManager.setTheme(ThemeMode.dark);
+              }
+            },
+          )
+        ],
       ),
       body: StreamBuilder(
         stream: Firestore.instance.collection('wallpapers').snapshots(),

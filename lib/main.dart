@@ -3,23 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:that_wallpaper_app/all_images.dart';
 import 'package:that_wallpaper_app/fav.dart';
 import 'package:that_wallpaper_app/home.dart';
+import 'package:that_wallpaper_app/theme_manager.dart';
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'That Wallpaper App!',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(title: 'That Wallpaper App!'),
-    );
-  }
+  runApp(MyHomePage(
+    title: 'That Wallpaper App!',
+  ));
 }
 
 class MyHomePage extends StatefulWidget {
@@ -37,9 +26,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+      valueListenable: ThemeManager.notifier,
+      child: _buildScaffold(),
+      builder: (BuildContext context, ThemeMode themeMode, Widget child) {
+        return MaterialApp(
+          title: widget.title,
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
+          themeMode: themeMode,
+          home: child,
+        );
+      },
+    );
+  }
+
+  Scaffold _buildScaffold() {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.brightness_5),
+            onPressed: () {
+              if (ThemeManager.notifier.value == ThemeMode.dark) {
+                ThemeManager.setTheme(ThemeMode.light);
+              } else {
+                ThemeManager.setTheme(ThemeMode.dark);
+              }
+            },
+          )
+        ],
       ),
       body: StreamBuilder(
         stream: Firestore.instance.collection('wallpapers').snapshots(),

@@ -9,17 +9,17 @@
 <h1 align="center">That Wallpaper App!</h1>
 
 <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/ufrshubham/that-wallpaper-app?color=56BEB8">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/ufrshubham/that-wallpaper-app?color=7745b7">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/ufrshubham/that-wallpaper-app?color=56BEB8">
+  <img alt="Github language count" src="https://img.shields.io/github/languages/count/ufrshubham/that-wallpaper-app?color=7745b7">
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/ufrshubham/that-wallpaper-app?color=56BEB8">
+  <img alt="Repository size" src="https://img.shields.io/github/repo-size/ufrshubham/that-wallpaper-app?color=7745b7">
 
-  <img alt="License" src="https://img.shields.io/github/license/ufrshubham/that-wallpaper-app?color=56BEB8">
+  <img alt="License" src="https://img.shields.io/github/license/ufrshubham/that-wallpaper-app?color=7745b7">
 
-  <img alt="Github forks" src="https://img.shields.io/github/forks/ufrshubham/that-wallpaper-app?color=56BEB8" />
+  <img alt="Github forks" src="https://img.shields.io/github/forks/ufrshubham/that-wallpaper-app?color=7745b7" />
 
-  <img alt="Github stars" src="https://img.shields.io/github/stars/ufrshubham/that-wallpaper-app?color=56BEB8" />
+  <img alt="Github stars" src="https://img.shields.io/github/stars/ufrshubham/that-wallpaper-app?color=7745b7" />
 </p>
 
 <!-- Status -->

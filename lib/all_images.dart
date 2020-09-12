@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:that_wallpaper_app/wallpaper_gallery.dart';
 
 class AllImages extends StatefulWidget {
   final AsyncSnapshot<QuerySnapshot> snapshot;
@@ -20,9 +21,24 @@ class _AllImagesState extends State<AllImages> {
         return Padding(
           padding: const EdgeInsets.all(1.0),
           child: GridTile(
-            child: CachedNetworkImage(
-              imageUrl: widget.snapshot.data.documents.elementAt(index)['url'],
-              fit: BoxFit.cover,
+            child: InkResponse(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return WallpaperGallery(
+                        wallpaperList: widget.snapshot.data.documents,
+                        initialPage: index,
+                      );
+                    },
+                  ),
+                );
+              },
+              child: CachedNetworkImage(
+                imageUrl:
+                    widget.snapshot.data.documents.elementAt(index)['url'],
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         );

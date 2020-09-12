@@ -13,8 +13,8 @@ const _setAs = {
 };
 
 Future<void> setWallpaper({
-  BuildContext context,
-  String imgUrl,
+  @required BuildContext context,
+  @required String imgUrl,
 }) async {
   var actionSheet = CupertinoActionSheet(
     title: Text('Set as'),

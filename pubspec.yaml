@@ -28,6 +28,7 @@ dependencies:
   wallpaper_manager: ^1.0.8
   flutter_cache_manager: ^1.4.1
   image_cropper: ^1.2.3
+  photo_view: ^0.10.2
 
 
   # The following adds the Cupertino Icons font to your application.

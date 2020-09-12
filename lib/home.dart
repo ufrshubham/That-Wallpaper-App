@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemCount: categories.length,
       itemBuilder: (BuildContext context, int index) {
         return InkResponse(

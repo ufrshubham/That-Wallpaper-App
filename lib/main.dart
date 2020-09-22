@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:that_wallpaper_app/all_images.dart';
 import 'package:that_wallpaper_app/fav.dart';
 import 'package:that_wallpaper_app/home.dart';
+import 'package:that_wallpaper_app/models/wallpaper.dart';
 import 'package:that_wallpaper_app/theme_manager.dart';
 
 void main() {
@@ -59,14 +60,21 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('wallpapers').snapshots(),
+        stream: Firestore.instance.collection('wallpapers_2').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData && snapshot.data.documents.isNotEmpty) {
+            var wallpapersList = List<Wallpaper>();
+
+            snapshot.data.documents.forEach((documentSnapshot) {
+              wallpapersList
+                  .add(Wallpaper.fromDocumentSnapshot(documentSnapshot));
+            });
+
             return PageView.builder(
               controller: pageController,
               itemCount: 3,
               itemBuilder: (BuildContext context, int index) {
-                return _getPageAtIndex(index, snapshot);
+                return _getPageAtIndex(index, wallpapersList);
               },
               onPageChanged: (int index) {
                 setState(() {
@@ -115,21 +123,21 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _getPageAtIndex(int index, AsyncSnapshot<QuerySnapshot> snapshot) {
+  Widget _getPageAtIndex(int index, List<Wallpaper> wallpaperList) {
     switch (index) {
       case 0:
         return AllImages(
-          snapshot: snapshot,
+          wallpapersList: wallpaperList,
         );
         break;
       case 1:
         return Home(
-          snapshot: snapshot,
+          wallpapersList: wallpaperList,
         );
         break;
       case 2:
         return Favorite(
-          snapshot: snapshot,
+          wallpapersList: wallpaperList,
         );
         break;
       default:

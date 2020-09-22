@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:that_wallpaper_app/utilities.dart';
 
+import 'models/wallpaper.dart';
+
 class WallpaperGallery extends StatefulWidget {
-  final List<DocumentSnapshot> wallpaperList;
+  final List<Wallpaper> wallpaperList;
   final int initialPage;
 
   WallpaperGallery(
@@ -41,7 +42,7 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
           builder: (BuildContext context, int index) {
             return PhotoViewGalleryPageOptions(
               imageProvider: CachedNetworkImageProvider(
-                widget.wallpaperList.elementAt(index)['url'],
+                widget.wallpaperList.elementAt(index).url,
               ),
             );
           },
@@ -59,7 +60,7 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                   await setWallpaper(
                     context: context,
                     imgUrl: widget.wallpaperList
-                        .elementAt(_pageController.page.toInt())['url'],
+                        .elementAt(_pageController.page.toInt()).url,
                   );
                 },
               ),

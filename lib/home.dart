@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:that_wallpaper_app/category_wallpapers.dart';
 
-class Home extends StatefulWidget {
-  final AsyncSnapshot<QuerySnapshot> snapshot;
+import 'models/wallpaper.dart';
 
-  Home({Key key, this.snapshot}) : super(key: key);
+class Home extends StatefulWidget {
+  final List<Wallpaper> wallpapersList;
+
+  Home({Key key, this.wallpapersList}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -20,14 +21,16 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    widget.snapshot.data.documents.forEach((document) {
-      var category = document.data['tag'];
+    widget.wallpapersList.forEach(
+      (wallpaper) {
+        var category = wallpaper.category;
 
-      if (!categories.contains(category)) {
-        categories.add(category);
-        categoryImages.add(document.data['url']);
-      }
-    });
+        if (!categories.contains(category)) {
+          categories.add(category);
+          categoryImages.add(wallpaper.url);
+        }
+      },
+    );
   }
 
   @override

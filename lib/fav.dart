@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import 'models/wallpaper.dart';
+
 class Favorite extends StatefulWidget {
-  final AsyncSnapshot<QuerySnapshot> snapshot;
-  
-  Favorite({Key key, this.snapshot}) : super(key: key);
+  final List<Wallpaper> wallpapersList;
+
+  Favorite({Key key, this.wallpapersList}) : super(key: key);
 
   @override
   _FavoriteState createState() => _FavoriteState();

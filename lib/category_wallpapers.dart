@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:that_wallpaper_app/models/wallpaper.dart';
+import 'package:that_wallpaper_app/wallpaper_gallery.dart';
 
 import 'theme_manager.dart';
-import 'utilities.dart';
 
 class CategoryWallpapers extends StatefulWidget {
   final String category;
@@ -35,26 +36,67 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('wallpapers').snapshots(),
+        stream: Firestore.instance.collection('wallpapers_2').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            // Get all documents of widget.category.
-            var categoryDocuments = snapshot.data.documents
-                .where((document) => (document.data['tag'] == widget.category));
+            // Get all wallpapers of widget.category.
+            var wallpapers =
+                _getWallpapersOfCurrentCategory(snapshot.data.documents);
 
             return ListView.builder(
-              itemCount: categoryDocuments.length,
+              itemCount: wallpapers.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: InkResponse(
                     onTap: () async {
-                      setWallpaper(
-                          context: context,
-                          imgUrl:
-                              categoryDocuments.elementAt(index).data['url']);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => WallpaperGallery(
+                              wallpaperList: wallpapers, initialPage: index),
+                        ),
+                      );
                     },
-                    child: CachedNetworkImage(
-                      imageUrl: categoryDocuments.elementAt(index).data['url'],
+                    child: Container(
+                      clipBehavior: Clip.hardEdge,
+                      height: 200.0,
+                      decoration: ShapeDecoration(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                        ),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: CachedNetworkImageProvider(
+                              wallpapers.elementAt(index).url),
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10.0),
+                          color: Color(
+                              Theme.of(context).textTheme.caption.color.value ^
+                                  0xffffff),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                wallpapers.elementAt(index).name,
+                                style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.favorite_border),
+                                onPressed: () {
+                                  // Todo : Mark as favorite.
+                                },
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 );
@@ -68,5 +110,20 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
         },
       ),
     );
+  }
+
+  List<Wallpaper> _getWallpapersOfCurrentCategory(
+      List<DocumentSnapshot> documents) {
+    var list = List<Wallpaper>();
+
+    documents.forEach((document) {
+      var wallpaper = Wallpaper.fromDocumentSnapshot(document);
+
+      if (wallpaper.category == widget.category) {
+        list.add(wallpaper);
+      }
+    });
+
+    return list;
   }
 }

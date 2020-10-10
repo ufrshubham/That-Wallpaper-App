@@ -99,15 +99,15 @@ class _MyHomePageState extends State<MyHomePage> {
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.image),
-          title: Text('All Images'),
+          label: 'All Images',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
-          title: Text('Home'),
+          label: 'Home',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.favorite),
-          title: Text('Favorites'),
+          label: 'Favorites',
         ),
       ],
       onTap: (int index) {

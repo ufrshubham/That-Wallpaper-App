@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ThemeManager extends ValueNotifier<ThemeMode> {
-
   // Private constructor.
   ThemeManager._internal(ThemeMode themeMode) : super(themeMode);
 

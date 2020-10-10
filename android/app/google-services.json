@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "123456789012",
+    "firebase_url": "https://that-wallpaper-app.firebaseio.com",
+    "project_id": "that-wallpaper-app",
+    "storage_bucket": "that-wallpaper-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "3:123456789012:android:abh3ok4hn478jhs083g7h2",
+        "android_client_info": {
+          "package_name": "com.devkage.that_wallpaper_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123456789012-sgn3sfg1sddfevgru6t223ss5nig3nif.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "dfsdAsCpsdsAdsh_5uDSsd8fgC12sLgfl-f-Ws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123456789012-sgn3sfg1sddfevgru6t223ss5nig3nif.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:that_wallpaper_app/models/wallpaper.dart';
+import 'package:that_wallpaper_app/providers/fav_wallpaper_manager.dart';
 import 'package:that_wallpaper_app/wallpaper_gallery.dart';
 
 import 'theme_manager.dart';
@@ -46,6 +48,9 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
             return ListView.builder(
               itemCount: wallpapers.length,
               itemBuilder: (BuildContext context, int index) {
+                var favWallpaperManager =
+                    Provider.of<FavWallpaperManager>(context);
+
                 return ListTile(
                   title: InkResponse(
                     onTap: () async {
@@ -88,9 +93,24 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
                                     fontWeight: FontWeight.w400),
                               ),
                               IconButton(
-                                icon: Icon(Icons.favorite_border),
+                                icon: Icon(
+                                  wallpapers.elementAt(index).isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: Colors.red,
+                                ),
                                 onPressed: () {
-                                  // Todo : Mark as favorite.
+                                  if (wallpapers.elementAt(index).isFavorite) {
+                                    favWallpaperManager.removeFromFav(
+                                      wallpapers.elementAt(index),
+                                    );
+                                  } else {
+                                    favWallpaperManager.addToFav(
+                                      wallpapers.elementAt(index),
+                                    );
+                                  }
+                                  wallpapers.elementAt(index).isFavorite =
+                                      !wallpapers.elementAt(index).isFavorite;
                                 },
                               )
                             ],
@@ -116,10 +136,16 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
       List<DocumentSnapshot> documents) {
     var list = List<Wallpaper>();
 
+    var favWallpaperManager = Provider.of<FavWallpaperManager>(context);
+
     documents.forEach((document) {
       var wallpaper = Wallpaper.fromDocumentSnapshot(document);
 
       if (wallpaper.category == widget.category) {
+        if (favWallpaperManager.isFavorite(wallpaper)) {
+          wallpaper.isFavorite = true;
+        }
+
         list.add(wallpaper);
       }
     });

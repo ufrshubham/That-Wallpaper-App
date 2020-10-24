@@ -1,15 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:that_wallpaper_app/all_images.dart';
+import 'package:that_wallpaper_app/constants.dart';
 import 'package:that_wallpaper_app/fav.dart';
 import 'package:that_wallpaper_app/home.dart';
 import 'package:that_wallpaper_app/models/wallpaper.dart';
+import 'package:that_wallpaper_app/providers/fav_wallpaper_manager.dart';
 import 'package:that_wallpaper_app/theme_manager.dart';
 
-void main() {
+Future<void> main() async {
+  await _initApp();
+
   runApp(MyHomePage(
     title: 'That Wallpaper App!',
   ));
+}
+
+Future _initApp() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  var docDir = await getApplicationDocumentsDirectory();
+  Hive.init(docDir.path);
+
+  var favBox = await Hive.openBox(FAV_BOX);
+  if (favBox.get(FAV_LIST_KEY) == null) {
+    favBox.put(FAV_LIST_KEY, List<dynamic>());
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -27,18 +46,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: ThemeManager.notifier,
-      child: _buildScaffold(),
-      builder: (BuildContext context, ThemeMode themeMode, Widget child) {
-        return MaterialApp(
-          title: widget.title,
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
-          themeMode: themeMode,
-          home: child,
-        );
-      },
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => FavWallpaperManager(),
+      child: ValueListenableBuilder(
+        valueListenable: ThemeManager.notifier,
+        child: _buildScaffold(),
+        builder: (BuildContext context, ThemeMode themeMode, Widget child) {
+          return MaterialApp(
+            title: widget.title,
+            theme: ThemeData.light(),
+            darkTheme: ThemeData.dark(),
+            themeMode: themeMode,
+            home: child,
+          );
+        },
+      ),
     );
   }
 
@@ -64,10 +86,16 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData && snapshot.data.documents.isNotEmpty) {
             var wallpapersList = List<Wallpaper>();
+            var favWallpaperManager = Provider.of<FavWallpaperManager>(context);
 
             snapshot.data.documents.forEach((documentSnapshot) {
-              wallpapersList
-                  .add(Wallpaper.fromDocumentSnapshot(documentSnapshot));
+              var wallpaper = Wallpaper.fromDocumentSnapshot(documentSnapshot);
+
+              if (favWallpaperManager.isFavorite(wallpaper)) {
+                wallpaper.isFavorite = true;
+              }
+
+              wallpapersList.add(wallpaper);
             });
 
             return PageView.builder(

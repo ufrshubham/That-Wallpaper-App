@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:provider/provider.dart';
 import 'package:that_wallpaper_app/utilities.dart';
 
 import 'models/wallpaper.dart';
+import 'providers/fav_wallpaper_manager.dart';
 
 class WallpaperGallery extends StatefulWidget {
   final List<Wallpaper> wallpaperList;
@@ -22,11 +24,13 @@ class WallpaperGallery extends StatefulWidget {
 
 class _WallpaperGalleryState extends State<WallpaperGallery> {
   PageController _pageController;
+  int _currentIndex;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.initialPage);
+    _currentIndex = widget.initialPage;
   }
 
   @override
@@ -40,6 +44,8 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
     return Scaffold(
       body: Builder(
         builder: (BuildContext context) {
+          var favWallpaperManager = Provider.of<FavWallpaperManager>(context);
+
           return Stack(children: [
             PhotoViewGallery.builder(
               pageController: _pageController,
@@ -51,15 +57,21 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                   ),
                 );
               },
+              onPageChanged: (index) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              },
             ),
             Align(
               alignment: Alignment.bottomCenter,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20.0),
                 child: Container(
-                  width: 100.0,
+                  width: 200.0,
                   color: Color(IconTheme.of(context).color.value ^ 0xffffff),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         icon: Icon(Icons.file_download),
@@ -68,13 +80,41 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
                         },
                       ),
                       IconButton(
+                          icon: Icon(
+                            widget.wallpaperList
+                                    .elementAt(_currentIndex)
+                                    .isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            if (widget.wallpaperList
+                                .elementAt(_currentIndex)
+                                .isFavorite) {
+                              favWallpaperManager.removeFromFav(
+                                widget.wallpaperList.elementAt(_currentIndex),
+                              );
+                            } else {
+                              favWallpaperManager.addToFav(
+                                widget.wallpaperList.elementAt(_currentIndex),
+                              );
+                            }
+                            widget.wallpaperList
+                                    .elementAt(_currentIndex)
+                                    .isFavorite =
+                                !widget.wallpaperList
+                                    .elementAt(_currentIndex)
+                                    .isFavorite;
+                          }),
+                      IconButton(
                         icon: Icon(Icons.format_paint),
                         onPressed: () async {
                           await setWallpaper(
                             context: context,
                             imgUrl: widget.wallpaperList
                                 .elementAt(
-                                  _pageController.page.toInt(),
+                                  _currentIndex,
                                 )
                                 .url,
                           );
@@ -99,7 +139,7 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
         var imageId = await ImageDownloader.downloadImage(
           widget.wallpaperList
               .elementAt(
-                _pageController.page.toInt(),
+                _currentIndex,
               )
               .url,
           destination: AndroidDestinationType.directoryPictures,

@@ -4,9 +4,13 @@ class Wallpaper {
   final String url;
   final String category;
   final String name;
+  final String id;
+  bool isFavorite;
 
   Wallpaper.fromDocumentSnapshot(DocumentSnapshot snapshot)
       : this.url = snapshot['url'],
         this.category = snapshot['tag'],
-        this.name = snapshot['name'];
+        this.name = snapshot['name'],
+        this.id = snapshot.documentID,
+        this.isFavorite = false;
 }

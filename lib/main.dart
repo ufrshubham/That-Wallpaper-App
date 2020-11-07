@@ -29,6 +29,11 @@ Future _initApp() async {
   if (favBox.get(FAV_LIST_KEY) == null) {
     favBox.put(FAV_LIST_KEY, List<dynamic>());
   }
+
+  var settings = await Hive.openBox(SETTINGS);
+  if(settings.get(DARK_THEME_KEY) == null){
+    settings.put(DARK_THEME_KEY, false);
+  }
 }
 
 class MyHomePage extends StatefulWidget {

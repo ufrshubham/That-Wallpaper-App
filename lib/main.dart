@@ -31,7 +31,7 @@ Future _initApp() async {
   }
 
   var settings = await Hive.openBox(SETTINGS);
-  if(settings.get(DARK_THEME_KEY) == null){
+  if (settings.get(DARK_THEME_KEY) == null) {
     settings.put(DARK_THEME_KEY, false);
   }
 }

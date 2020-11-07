@@ -36,7 +36,7 @@
   <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
   <a href="#checkered_flag-starting">Starting</a> &#xa0; | &#xa0;
   <a href="#memo-license">License</a> &#xa0; | &#xa0;
-  <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">Author</a>
+  <a href="https://github.com/ufrshubham" target="_blank">Author</a>
 </p>
 
 <br>
@@ -68,6 +68,8 @@ The following tools were used in this project:
 Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Flutter](https://flutter.dev/) installed.
 
 ## :checkered_flag: Starting ##
+
+Note: Make sure to create your own firebase project and place google-services.json under /android/app/. The one supplied with this project is a dummy file.
 
 ```bash
 # Clone this project

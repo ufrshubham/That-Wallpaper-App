@@ -11,6 +11,6 @@ class Wallpaper {
       : this.url = snapshot['url'],
         this.category = snapshot['tag'],
         this.name = snapshot['name'],
-        this.id = snapshot.documentID,
+        this.id = snapshot.id,
         this.isFavorite = false;
 }

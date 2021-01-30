@@ -38,12 +38,13 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('wallpapers_2').snapshots(),
+        stream:
+            FirebaseFirestore.instance.collection('wallpapers_2').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
             // Get all wallpapers of widget.category.
             var wallpapers =
-                _getWallpapersOfCurrentCategory(snapshot.data.documents);
+                _getWallpapersOfCurrentCategory(snapshot.data.docs);
 
             return ListView.builder(
               itemCount: wallpapers.length,

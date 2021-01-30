@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,6 +22,7 @@ Future<void> main() async {
 
 Future _initApp() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   var docDir = await getApplicationDocumentsDirectory();
   Hive.init(docDir.path);
@@ -87,13 +89,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('wallpapers_2').snapshots(),
+        stream:
+            FirebaseFirestore.instance.collection('wallpapers_2').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData && snapshot.data.documents.isNotEmpty) {
+          if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
             var wallpapersList = List<Wallpaper>();
             var favWallpaperManager = Provider.of<FavWallpaperManager>(context);
 
-            snapshot.data.documents.forEach((documentSnapshot) {
+            snapshot.data.docs.forEach((documentSnapshot) {
               var wallpaper = Wallpaper.fromDocumentSnapshot(documentSnapshot);
 
               if (favWallpaperManager.isFavorite(wallpaper)) {

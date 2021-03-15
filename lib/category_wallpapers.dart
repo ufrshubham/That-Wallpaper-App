@@ -135,7 +135,7 @@ class _CategoryWallpapersState extends State<CategoryWallpapers> {
 
   List<Wallpaper> _getWallpapersOfCurrentCategory(
       List<DocumentSnapshot> documents) {
-    var list = List<Wallpaper>();
+    var list = List<Wallpaper>.empty(growable: true);
 
     var favWallpaperManager = Provider.of<FavWallpaperManager>(context);
 

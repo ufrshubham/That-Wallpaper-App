@@ -29,7 +29,7 @@ Future _initApp() async {
 
   var favBox = await Hive.openBox(FAV_BOX);
   if (favBox.get(FAV_LIST_KEY) == null) {
-    favBox.put(FAV_LIST_KEY, List<dynamic>());
+    favBox.put(FAV_LIST_KEY, List<dynamic>.empty(growable: true));
   }
 
   var settings = await Hive.openBox(SETTINGS);
@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
             FirebaseFirestore.instance.collection('wallpapers_2').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData && snapshot.data.docs.isNotEmpty) {
-            var wallpapersList = List<Wallpaper>();
+            var wallpapersList = List<Wallpaper>.empty(growable: true);
             var favWallpaperManager = Provider.of<FavWallpaperManager>(context);
 
             snapshot.data.docs.forEach((documentSnapshot) {

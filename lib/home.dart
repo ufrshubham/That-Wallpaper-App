@@ -14,8 +14,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final categories = List<String>();
-  final categoryImages = List<String>();
+  final categories = List<String>.empty(growable: true);
+  final categoryImages = List<String>.empty(growable: true);
 
   @override
   void initState() {

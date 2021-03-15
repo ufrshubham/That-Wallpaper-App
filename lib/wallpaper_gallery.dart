@@ -145,7 +145,7 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
           destination: AndroidDestinationType.directoryPictures,
         );
 
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Download completed.'),
             action: SnackBarAction(
@@ -168,23 +168,25 @@ class _WallpaperGalleryState extends State<WallpaperGallery> {
   void _showOpenSettingsAlert(BuildContext context) {
     showDialog(
       context: context,
-      child: AlertDialog(
-        title: Text('Need access to storage.'),
-        actions: [
-          FlatButton(
-            onPressed: () {
-              openAppSettings();
-            },
-            child: Text('Open settings'),
-          ),
-          FlatButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Cancel'),
-          )
-        ],
-      ),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Need access to storage.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                openAppSettings();
+              },
+              child: Text('Open settings'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            )
+          ],
+        );
+      },
     );
   }
 }
